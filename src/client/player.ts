@@ -12,6 +12,7 @@
 
 import type { BeepPreset, EventSoundConfig, SoundMode, TtsSettings } from './prefs.ts'
 import { VOICE_PACKS, type ClipKind, type VoicePackId } from './voicepacks.ts'
+import { acquireClipUrl, releaseClipUrl } from './audio-store.ts'
 
 /** 播放失败时静默降级，绝不让声音问题影响 DSH 本体。 */
 function logPlayError(kind: string, error: unknown): void {
@@ -215,7 +216,7 @@ function playPack(kind: BeepKind, packId: VoicePackId, volume: number): void {
 }
 
 /* ------------------------------------------------------------------ *
- * 4. 自定义语音包（音频 URL）
+ * 4. 自定义语音包（本地文件 / 音频 URL）
  * ------------------------------------------------------------------ */
 
 function playCustom(url: string, volume: number): void {
@@ -228,6 +229,28 @@ function playCustom(url: string, volume: number): void {
   void audio.play().catch((error) => {
     logPlayError('custom', error)
   })
+}
+
+/** 从 IndexedDB 取本地音频，播完后 revoke blob URL。 */
+async function playCustomFile(audioId: string, volume: number): Promise<void> {
+  const url = await acquireClipUrl(audioId)
+  if (url === undefined) {
+    logPlayError('custom', new Error(`audio id not found: ${audioId}`))
+    return
+  }
+  try {
+    const audio = new Audio(url)
+    audio.volume = Math.min(1, Math.max(0, volume))
+    await new Promise<void>((resolve, reject) => {
+      audio.onended = () => resolve()
+      audio.onerror = () => reject(audio.error ?? new Error('audio play failed'))
+      void audio.play().catch(reject)
+    })
+  } catch (error) {
+    logPlayError('custom', error)
+  } finally {
+    releaseClipUrl(audioId)
+  }
 }
 
 /* ------------------------------------------------------------------ *
@@ -256,6 +279,10 @@ export function playEventSound(
       playPack(kind, config.packId, volume)
       return
     case 'custom':
+      if (config.customAudioId !== '') {
+        void playCustomFile(config.customAudioId, volume)
+        return
+      }
       if (config.customUrl !== '') {
         playCustom(config.customUrl, volume)
         return
@@ -268,7 +295,7 @@ export function playEventSound(
   }
 }
 
-/** 设置卡片"试听":按指定模式/风格播放，不读取 localStorage 之外的上下文。 */
+/** 设置卡片"试听":按指定模式/风格播放。传入 config 时试听 custom 能拿到实际的 audioId / URL。 */
 export function playEventSoundByMode(
   kind: BeepKind,
   mode: SoundMode,
@@ -276,6 +303,7 @@ export function playEventSoundByMode(
   preset: BeepPreset = 'classic',
   tts?: TtsSettings,
   packId: VoicePackId = 'soft-female',
+  config?: EventSoundConfig,
 ): void {
   switch (mode) {
     case 'off':
@@ -287,7 +315,15 @@ export function playEventSoundByMode(
       playPack(kind, packId, volume)
       return
     case 'custom':
-      playBeep(kind, volume, preset) // 设置卡片"试听"没有 URL 上下文，custom 回退为音效
+      if (config !== undefined && config.customAudioId !== '') {
+        void playCustomFile(config.customAudioId, volume)
+        return
+      }
+      if (config !== undefined && config.customUrl !== '') {
+        playCustom(config.customUrl, volume)
+        return
+      }
+      playBeep(kind, volume, preset) // 没 URL 也没本地文件，回退音效
       return
     case 'beep':
       playBeep(kind, volume, preset)

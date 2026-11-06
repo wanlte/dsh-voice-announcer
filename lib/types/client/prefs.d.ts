@@ -11,14 +11,18 @@ export type SoundMode = 'off' | 'beep' | 'pack' | 'tts' | 'custom';
 export type BeepPreset = 'classic' | 'chime' | 'marimba' | 'bell' | 'pulse' | 'coin';
 export declare const BEEP_PRESETS: readonly BeepPreset[];
 export interface EventSoundConfig {
-    /** 播报方式：off=关闭 / beep=合成音效 / pack=内置人声语音包 / tts=浏览器朗读 / custom=自定义音频 URL。 */
+    /** 播报方式：off=关闭 / beep=合成音效 / pack=内置人声语音包 / tts=浏览器朗读 / custom=自定义音频（本地文件或 URL）。 */
     mode: SoundMode;
     /** beep 模式：音效风格预设。 */
     beepPreset: BeepPreset;
     /** pack 模式：内置语音包 id。 */
     packId: VoicePackId;
-    /** custom 模式：音频文件 URL（http(s) 或 data: 均可）。 */
+    /** custom 模式：本地文件在 IndexedDB 中的 id（优先级高于 customUrl）。 */
+    customAudioId: string;
+    /** custom 模式：音频文件 URL（http(s) 或 data: 均可）；customAudioId 为空时使用。 */
     customUrl: string;
+    /** custom 模式：本地文件的展示名（仅 UI 使用，不依赖 IDB 是否存在）。 */
+    customAudioName: string;
     /** tts 模式：朗读的文本（空则用默认文案；旧版本字段，v0.2 起推荐用 template）。 */
     ttsText: string;
     /**

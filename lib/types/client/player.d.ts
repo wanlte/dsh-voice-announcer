@@ -21,8 +21,8 @@ export type BeepKind = 'start' | 'complete' | 'error' | 'question' | 'approval';
  * @param tts tts 模式的音色/语速/音调；省略则用系统默认。
  */
 export declare function playEventSound(kind: BeepKind, config: EventSoundConfig, volume: number, textOverride?: string, tts?: TtsSettings): void;
-/** 设置卡片"试听":按指定模式/风格播放，不读取 localStorage 之外的上下文。 */
-export declare function playEventSoundByMode(kind: BeepKind, mode: SoundMode, volume: number, preset?: BeepPreset, tts?: TtsSettings, packId?: VoicePackId): void;
+/** 设置卡片"试听":按指定模式/风格播放。传入 config 时试听 custom 能拿到实际的 audioId / URL。 */
+export declare function playEventSoundByMode(kind: BeepKind, mode: SoundMode, volume: number, preset?: BeepPreset, tts?: TtsSettings, packId?: VoicePackId, config?: EventSoundConfig): void;
 export declare function defaultTtsText(kind: BeepKind): string;
 /** 卸载插件时清理：关掉声音、释放手势监听由调用方负责。 */
 export declare function disposePlayer(): void;

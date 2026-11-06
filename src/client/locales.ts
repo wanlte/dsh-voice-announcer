@@ -63,6 +63,36 @@ export const zh = {
   privacyTitle: '隐私说明',
   privacyDesc: '所有声音都在浏览器本地播放，不上传任何数据，无需 API Key，不落盘。',
   failure: '播报失败：{code}',
+  /* v0.4 新：Tab 布局 */
+  tabGeneral: '通用',
+  tabTask: '任务事件',
+  tabChat: '对话提醒',
+  /* v0.4 新：自定义音频导入 */
+  customIntro: '选择本地音频文件、拖拽到下方区域、或填一个在线 URL；三者任选其一。',
+  customPickFile: '选择文件…',
+  customDropHint: '拖拽音频文件到这里（mp3 / wav / ogg / m4a 等）',
+  customDropping: '释放以上传…',
+  customCurrentFile: '当前文件：{name}（{size}）',
+  customNoFile: '尚未选择本地文件',
+  customRemoveFile: '移除文件',
+  customOrUrl: '或使用在线 URL：',
+  customSourceFile: '数据源：本地文件',
+  customSourceUrl: '数据源：在线 URL',
+  customUnsupportedType: '不支持的文件类型，请选音频文件',
+  customSaveFailed: '保存失败：{error}',
+  /* v0.4 新：事件行折叠 header */
+  eventCurrently: '当前：{summary}',
+  summaryOff: '已关闭',
+  summaryBeep: '合成音效・{preset}',
+  summaryPack: '语音包・{pack}',
+  summaryTts: '浏览器朗读',
+  summaryCustomFile: '本地音频・{name}',
+  summaryCustomUrl: '在线音频',
+  summaryCustomBeep: '未配置→回退音效',
+  /* v0.4 新：顶部快捷导入条 */
+  quickAddHint: '拖入一个音频文件或点击右侧按钮——自动切换为自定义模式',
+  quickAddButton: '添加音频…',
+  quickAddReplace: '更换音频…',
 } as const
 
 export const en = {
@@ -128,4 +158,34 @@ export const en = {
   privacyTitle: 'Privacy',
   privacyDesc: 'Every sound plays locally in your browser — no uploads, no API key, nothing stored.',
   failure: 'Announcement failed: {code}',
+  /* v0.4 new: tab layout */
+  tabGeneral: 'General',
+  tabTask: 'Task events',
+  tabChat: 'Chat alerts',
+  /* v0.4 new: custom audio import */
+  customIntro: 'Pick a local audio file, drop one below, or paste an online URL — any one of the three.',
+  customPickFile: 'Choose file…',
+  customDropHint: 'Drop an audio file here (mp3 / wav / ogg / m4a …)',
+  customDropping: 'Release to upload…',
+  customCurrentFile: 'Current file: {name} ({size})',
+  customNoFile: 'No local file selected',
+  customRemoveFile: 'Remove file',
+  customOrUrl: 'Or use an online URL:',
+  customSourceFile: 'Source: local file',
+  customSourceUrl: 'Source: online URL',
+  customUnsupportedType: 'Unsupported file type — please pick an audio file',
+  customSaveFailed: 'Save failed: {error}',
+  /* v0.4 new: collapsed event header */
+  eventCurrently: 'Now: {summary}',
+  summaryOff: 'Off',
+  summaryBeep: 'Beep · {preset}',
+  summaryPack: 'Voice pack · {pack}',
+  summaryTts: 'Browser TTS',
+  summaryCustomFile: 'Local audio · {name}',
+  summaryCustomUrl: 'Online audio',
+  summaryCustomBeep: 'Not configured → falls back to beep',
+  /* v0.4 new: quick-add bar */
+  quickAddHint: 'Drop an audio file here or click the button — auto-switches to Custom mode',
+  quickAddButton: 'Add audio…',
+  quickAddReplace: 'Replace audio…',
 } as const

@@ -36,7 +36,7 @@
 | 合成音效 | 6 套风格（经典 / 叮咚 / 木琴 / 铃声 / 电子脉冲 / 金币 8-bit），Web Audio 实时合成，零文件 |
 | 内置人声语音包 | 温柔女声 / 沉稳男声两套真人感片段，随插件离线分发，无需联网 |
 | TTS 音色可选 | 选系统语音（如 Kuteng/Huihui/Kangkang），并可调语速、音调 |
-| 自定义语音包 | 填一个音频 URL（mp3/wav/ogg 等），用你自己的声音 |
+| 自定义语音包 | 本地文件（选择器/拖拽，存 IndexedDB，离线可播）或填音频 URL；留空时回退为合成音效 |
 | 总开关 + 音量 | 一键静音，音量 0~100 |
 | 防抖间隔 | 同一类事件在时间窗内只播一次，避免多个子任务同时结束时连播轰炸 |
 | 试听按钮 | 每类事件都能先试听再保存 |
@@ -75,13 +75,13 @@ pnpm dsh plugin --profile desktop add .
 
 ```sh
 pnpm run build
-pnpm pack   # 产出 dsh-voice-announcer-0.3.0.tgz
+pnpm pack   # 产出 dsh-voice-announcer-0.4.0.tgz
 
 # Web
-pnpm dsh plugin --profile web add ./dsh-voice-announcer-0.3.0.tgz
+pnpm dsh plugin --profile web add ./dsh-voice-announcer-0.4.0.tgz
 
 # Desktop
-pnpm dsh plugin --profile desktop add ./dsh-voice-announcer-0.3.0.tgz
+pnpm dsh plugin --profile desktop add ./dsh-voice-announcer-0.4.0.tgz
 ```
 
 ### 卸载
@@ -129,7 +129,7 @@ rm -rf lib/
 | 合成音效 | Web Audio 实时合成，6 套风格可选：经典 / 清脆叮咚 / 木琴 / 铃声 / 电子脉冲 / 金币 8-bit |
 | 内置语音包 | 随插件打包的人声片段（温柔女声 / 沉稳男声），离线播放；文案固定，不念任务名和用时 |
 | 浏览器朗读（TTS） | 朗读渲染后的文案，念出任务名、用时、错误原因、提问内容；可选音色/语速/音调 |
-| 自定义语音包 | 填音频 URL（https://…/sound.mp3）；留空时回退为合成音效 |
+| 自定义语音包 | 本地文件（拖拽/选择器，存 IndexedDB）或在线 URL |
 
 > 内置语音包目前只录了「开始 / 完成 / 失败」三段人声。「等你回答」「等你确认」
 > 选内置语音包时，会借用「完成」那段当提示音（设置卡片里有对应提示）。
@@ -242,7 +242,7 @@ src/
 ```sh
 # 1. 建 GitHub 仓库，把 package.json 的 repository.url 换成真实地址
 # 2. 打 tag 触发自动发布到 npm + GitHub Release：
-git tag v0.3.0 && git push origin v0.3.0
+git tag v0.4.0 && git push origin v0.4.0
 ```
 
 自动发布流水线（`.github/workflows/publish.yml`）：
@@ -253,11 +253,13 @@ git tag v0.3.0 && git push origin v0.3.0
 
 - [x] v0.2.0：模板文案（任务名/用时/错误原因）、免打扰时段、6 套合成音效、TTS 音色与语速、内置人声语音包
 - [x] v0.3.0：对话提醒 —— AI 提问等你回答（`user-questions/request`）、AI 操作等你确认（`approval/request`）
+- [x] v0.4.0：设置卡片重构为 Tab 布局（通用 / 任务事件 / 对话提醒），事件行默认折叠 + 当前配置摘要；自定义语音支持本地文件导入（文件选择器 + 拖拽），音频存 IndexedDB，同时保留 URL 方式
 - [ ] 演示截图与语音 demo（本 README 顶部）
 - [ ] 为「等你回答 / 等你确认」录制专属语音片段（现在借用完成音）
 - [ ] 更多内置语音包风格（如活泼童声、粤语/英文口音）
 - [ ] 可选：发布到 DSH Plugin Store / deepseekplugin.cn 等社区目录
 - [ ] 可选：更多事件（如子任务、工具调用）
+- [ ] 可选：clip 库列表，多个事件复用同一份本地音频
 
 ## License
 

@@ -1,6 +1,6 @@
 {
   "name": "dsh-voice-announcer",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "DSH 语音播报与对话提醒插件：任务开始/完成/失败、AI 提问等你回答、AI 操作等你确认时自动出声，支持模板文案、免打扰、6 套合成音效、内置人声语音包、TTS 朗读与自定义音频。",
   "type": "module",
   "main": "lib/index.js",

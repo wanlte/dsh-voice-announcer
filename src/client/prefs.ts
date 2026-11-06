@@ -16,14 +16,18 @@ export type BeepPreset = 'classic' | 'chime' | 'marimba' | 'bell' | 'pulse' | 'c
 export const BEEP_PRESETS: readonly BeepPreset[] = ['classic', 'chime', 'marimba', 'bell', 'pulse', 'coin']
 
 export interface EventSoundConfig {
-  /** 播报方式：off=关闭 / beep=合成音效 / pack=内置人声语音包 / tts=浏览器朗读 / custom=自定义音频 URL。 */
+  /** 播报方式：off=关闭 / beep=合成音效 / pack=内置人声语音包 / tts=浏览器朗读 / custom=自定义音频（本地文件或 URL）。 */
   mode: SoundMode
   /** beep 模式：音效风格预设。 */
   beepPreset: BeepPreset
   /** pack 模式：内置语音包 id。 */
   packId: VoicePackId
-  /** custom 模式：音频文件 URL（http(s) 或 data: 均可）。 */
+  /** custom 模式：本地文件在 IndexedDB 中的 id（优先级高于 customUrl）。 */
+  customAudioId: string
+  /** custom 模式：音频文件 URL（http(s) 或 data: 均可）；customAudioId 为空时使用。 */
   customUrl: string
+  /** custom 模式：本地文件的展示名（仅 UI 使用，不依赖 IDB 是否存在）。 */
+  customAudioName: string
   /** tts 模式：朗读的文本（空则用默认文案；旧版本字段，v0.2 起推荐用 template）。 */
   ttsText: string
   /**
@@ -86,11 +90,11 @@ export const DEFAULT_PREFS: AnnouncerPrefs = {
   debounceMs: 1500,
   quietHours: { enabled: false, start: '23:00', end: '08:00' },
   tts: { voiceName: '', rate: 1, pitch: 1 },
-  start: { mode: 'beep', beepPreset: 'classic', packId: 'soft-female', customUrl: '', ttsText: '任务开始', template: '任务「{{title}}」开始' },
-  complete: { mode: 'pack', beepPreset: 'classic', packId: 'soft-female', customUrl: '', ttsText: '任务已完成', template: '任务「{{title}}」已完成，用时 {{duration}}' },
-  error: { mode: 'pack', beepPreset: 'classic', packId: 'soft-female', customUrl: '', ttsText: '任务失败，请检查', template: '任务「{{title}}」失败，原因：{{error}}' },
-  question: { mode: 'tts', beepPreset: 'chime', packId: 'soft-female', customUrl: '', ttsText: '有问题等你回答', template: '「{{title}}」有问题等你回答：{{text}}' },
-  approval: { mode: 'tts', beepPreset: 'bell', packId: 'soft-female', customUrl: '', ttsText: '有操作等你确认', template: '「{{title}}」有操作等你确认：{{tool}}' },
+  start: { mode: 'beep', beepPreset: 'classic', packId: 'soft-female', customAudioId: '', customAudioName: '', customUrl: '', ttsText: '任务开始', template: '任务「{{title}}」开始' },
+  complete: { mode: 'pack', beepPreset: 'classic', packId: 'soft-female', customAudioId: '', customAudioName: '', customUrl: '', ttsText: '任务已完成', template: '任务「{{title}}」已完成，用时 {{duration}}' },
+  error: { mode: 'pack', beepPreset: 'classic', packId: 'soft-female', customAudioId: '', customAudioName: '', customUrl: '', ttsText: '任务失败，请检查', template: '任务「{{title}}」失败，原因：{{error}}' },
+  question: { mode: 'tts', beepPreset: 'chime', packId: 'soft-female', customAudioId: '', customAudioName: '', customUrl: '', ttsText: '有问题等你回答', template: '「{{title}}」有问题等你回答：{{text}}' },
+  approval: { mode: 'tts', beepPreset: 'bell', packId: 'soft-female', customAudioId: '', customAudioName: '', customUrl: '', ttsText: '有操作等你确认', template: '「{{title}}」有操作等你确认：{{tool}}' },
 }
 
 export const PREFS_KEY = 'dsh-voice-announcer.prefs'
@@ -116,6 +120,8 @@ function mergeEventConfig(
     mode: isSoundMode(input.mode) ? input.mode : fallback.mode,
     beepPreset: isBeepPreset(input.beepPreset) ? input.beepPreset : fallback.beepPreset,
     packId: isVoicePackId(input.packId) ? input.packId : fallback.packId,
+    customAudioId: typeof input.customAudioId === 'string' ? input.customAudioId : fallback.customAudioId,
+    customAudioName: typeof input.customAudioName === 'string' ? input.customAudioName : fallback.customAudioName,
     customUrl: typeof input.customUrl === 'string' ? input.customUrl : fallback.customUrl,
     ttsText: typeof input.ttsText === 'string' ? input.ttsText : fallback.ttsText,
     template: typeof input.template === 'string' ? input.template : fallback.template,
