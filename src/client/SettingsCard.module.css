@@ -149,8 +149,35 @@
   font-weight: 600;
 }
 
+/* 分组小节标题（如「对话提醒」）：把任务播报和对话提醒分开 */
+.sectionTitle {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin: 8px 0 0;
+  font-size: 13px;
+  font-weight: 600;
+}
+
 .groupDesc {
   font-size: 12px;
   font-weight: 400;
   opacity: 0.6;
+}
+
+.timeRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 2px;
+}
+
+.timeInput {
+  padding: 4px 8px;
+  border-radius: 6px;
+  border: 1px solid var(--divider-color, rgba(128, 128, 128, 0.35));
+  background: var(--input-bg, rgba(128, 128, 128, 0.08));
+  color: inherit;
+  font: inherit;
+  font-size: 13px;
 }

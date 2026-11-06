@@ -10,3 +10,6 @@ node_modules/
 Thumbs.db
 .idea/
 .vscode/
+
+# 语音素材（内置 MP3 已 base64 内联进 client bundle）
+voice-src/*.wav
