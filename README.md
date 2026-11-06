@@ -46,10 +46,16 @@
 
 要求：Node ≥ 22.19，pnpm ≥ 10，dsh 0.2.x。
 
+> 以下命令中 `--profile` 按实际平台选择：`web`（浏览器版）或 `desktop`（桌面版）。
+
 ### 方式 A：从 GitHub 安装（推荐，发布后可用）
 
 ```sh
-pnpm dsh plugin --profile web add github:你的用户名/dsh-voice-announcer
+# Web
+pnpm dsh plugin --profile web add github:wanlte/dsh-voice-announcer
+
+# Desktop
+pnpm dsh plugin --profile desktop add github:wanlte/dsh-voice-announcer
 ```
 
 ### 方式 B：本地开发链接
@@ -57,7 +63,12 @@ pnpm dsh plugin --profile web add github:你的用户名/dsh-voice-announcer
 ```sh
 cd dsh-voice-announcer
 pnpm install
+
+# Web
 pnpm dsh plugin --profile web add .
+
+# Desktop
+pnpm dsh plugin --profile desktop add .
 ```
 
 ### 方式 C：打包安装
@@ -65,10 +76,34 @@ pnpm dsh plugin --profile web add .
 ```sh
 pnpm run build
 pnpm pack   # 产出 dsh-voice-announcer-0.3.0.tgz
+
+# Web
 pnpm dsh plugin --profile web add ./dsh-voice-announcer-0.3.0.tgz
+
+# Desktop
+pnpm dsh plugin --profile desktop add ./dsh-voice-announcer-0.3.0.tgz
 ```
 
-**激活**：重启 `dsh web`。插件的 `cordis.patch.yml` 会自动把它挂进插件树，
+### 卸载
+
+```sh
+# Web
+pnpm dsh plugin --profile web remove dsh-voice-announcer
+
+# Desktop
+pnpm dsh plugin --profile desktop remove dsh-voice-announcer
+```
+
+卸载后重启 DSH 生效。如需清理本地构建产物：
+
+```sh
+rm -rf lib/
+```
+
+> 浏览器中的用户偏好（localStorage key: `dsh-voice-announcer.prefs`）不会随插件卸载自动清除，
+> 需要手动在 DevTools → Application → Local Storage 中删除。
+
+**激活**：重启 `dsh web` 或 `dsh desktop`。插件的 `cordis.patch.yml` 会自动把它挂进插件树，
 客户端 bundle 由 `dsh.client` 声明 + `exports["./client"]` 自动加载。
 不要手工把插件插进 profile 的 `cordis.patch.yml`，否则同一 loader id 会重复。
 
